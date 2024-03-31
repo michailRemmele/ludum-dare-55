@@ -17,6 +17,7 @@ module.exports = {
     'class-methods-use-this': 0,
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'react/react-in-jsx-scope': 0,
+    'react/no-unused-class-component-methods': 0,
   },
   overrides: [
     {

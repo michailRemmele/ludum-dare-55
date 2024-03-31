@@ -22,6 +22,9 @@ import {
   ScriptBundle,
 } from 'remiz';
 
+import * as GameSystems from './game/systems';
+import * as GameComponents from './game/components';
+
 import config from '../data/data.json';
 
 const engine = new Engine({
@@ -36,6 +39,7 @@ const engine = new Engine({
     SpriteRenderer,
     UiBridge,
     ScriptSystem,
+    ...Object.values(GameSystems),
   ],
   components: [
     Camera,
@@ -47,6 +51,7 @@ const engine = new Engine({
     Transform,
     MouseControl,
     ScriptBundle,
+    ...Object.values(GameComponents),
   ],
   resources: {
     [UiBridge.systemName]: {

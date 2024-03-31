@@ -1,0 +1,6 @@
+{
+  "components.exampleComponent.title": "Example Component",
+  "components.exampleComponent.field.title": "Field",
+
+  "systems.exampleSystem.title": "Example System"
+}
