@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -56,10 +57,10 @@ module.exports = {
             ignore: [path.resolve(__dirname, 'public/index.html')],
           },
         },
-        {
+        fs.readdirSync(path.join(__dirname, 'data/assets')).length ? {
           from: path.join(__dirname, 'data/assets'),
-        },
-      ],
+        } : null,
+      ].filter(Boolean),
     }),
   ].filter(Boolean),
 
