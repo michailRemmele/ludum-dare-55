@@ -2,5 +2,7 @@
   "components.exampleComponent.title": "Example Component",
   "components.exampleComponent.field.title": "Field",
 
-  "systems.exampleSystem.title": "Example System"
+  "systems.exampleSystem.title": "Example System",
+
+  "resources.scriptSystem.exampleScript.impulse.title": "Impulse"
 }
