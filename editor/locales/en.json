@@ -1,11 +1,11 @@
 {
-  "components.exampleComponent.title": "Example Component",
-  "components.exampleComponent.field.title": "Field",
+  "components.health.title": "Health",
+  "components.health.points.title": "Points",
   "components.movement.title": "Movement",
   "components.movement.speed.title": "Speed",
+  "components.resurrectable.title": "Resurrectable",
+  "components.resurrectable.area.title": "Area",
 
   "systems.movementSystem.title": "Movement System",
-  "systems.exampleSystem.title": "Example System",
-
-  "resources.scriptSystem.exampleScript.impulse.title": "Impulse"
+  "systems.healthSystem.title": "Health System"
 }

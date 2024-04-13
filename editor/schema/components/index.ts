@@ -1,11 +1,13 @@
 import type { WidgetSchema } from 'remiz-editor';
 
-import { ExampleComponent, Movement } from '../../../src/game/components';
+import { Health, Movement, Resurrectable } from '../../../src/game/components';
 
-import { exampleComponent } from './example-component';
+import { health } from './health';
 import { movement } from './movement';
+import { resurrectable } from './resurrectable';
 
 export const componentsSchema: Record<string, WidgetSchema> = {
-  [ExampleComponent.componentName]: exampleComponent,
+  [Health.componentName]: health,
   [Movement.componentName]: movement,
+  [Resurrectable.componentName]: resurrectable,
 };

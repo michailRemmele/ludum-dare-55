@@ -1,11 +1,11 @@
 import type { WidgetSchema } from 'remiz-editor';
 
-import { ExampleSystem, MovementSystem } from '../../../src/game/systems';
+import { HealthSystem, MovementSystem } from '../../../src/game/systems';
 
-import { exampleSystem } from './example-system';
+import { healthSystem } from './health-system';
 import { movementSystem } from './movement-system';
 
 export const systemsSchema: Record<string, WidgetSchema> = {
-  [ExampleSystem.systemName]: exampleSystem,
+  [HealthSystem.systemName]: healthSystem,
   [MovementSystem.systemName]: movementSystem,
 };

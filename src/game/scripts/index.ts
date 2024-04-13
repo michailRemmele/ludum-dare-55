@@ -1,1 +1,1 @@
-export { ExampleScript } from './example-script';
+export { PlayerScript } from './player-script';
