@@ -1,14 +1,14 @@
 import { Component } from 'remiz';
 
-interface HealthConfig {
+interface ManaConfig {
   points: number
 }
 
-export class Health extends Component {
+export class Mana extends Component {
   points: number;
   maxPoints: number;
 
-  constructor(config: HealthConfig) {
+  constructor(config: ManaConfig) {
     super();
 
     const { points } = config;
@@ -17,9 +17,9 @@ export class Health extends Component {
     this.maxPoints = points;
   }
 
-  clone(): Health {
-    return new Health({ points: this.points });
+  clone(): Mana {
+    return new Mana({ points: this.points });
   }
 }
 
-Health.componentName = 'Health';
+Mana.componentName = 'Mana';

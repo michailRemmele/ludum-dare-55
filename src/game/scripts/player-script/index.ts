@@ -9,13 +9,14 @@ import type { CollisionEnterEvent, CollisionLeaveEvent } from 'remiz/events';
 
 import * as EventType from '../../events';
 import { LIGHT_FIGHTER_GHOST_ID } from '../../../consts/templates';
-import { Resurrectable } from '../../components';
+import { Resurrectable, Spellbook } from '../../components';
 
 export class PlayerScript extends Script {
   private scene: Scene;
   private actor: Actor;
   private actorSpawner: ActorSpawner;
   private canResurrect: Array<Actor>;
+  private activeGhost: Actor | undefined;
 
   constructor(options: ScriptOptions) {
     super();
@@ -41,6 +42,9 @@ export class PlayerScript extends Script {
 
     if (actor.getComponent(Resurrectable)) {
       this.canResurrect.push(actor);
+
+      const spellbook = this.actor.getComponent(Spellbook);
+      spellbook.canResurrect = true;
     }
   };
 
@@ -50,11 +54,20 @@ export class PlayerScript extends Script {
     if (actor.getComponent(Resurrectable)) {
       this.canResurrect = this.canResurrect.filter((item) => item !== actor);
     }
+
+    if (this.canResurrect.length === 0) {
+      const spellbook = this.actor.getComponent(Spellbook);
+      spellbook.canResurrect = false;
+    }
   };
 
   private handleResurrect = (): void => {
     if (!this.canResurrect.length) {
       return;
+    }
+
+    if (this.activeGhost) {
+      this.activeGhost.dispatchEvent(EventType.Kill);
     }
 
     const corpse = this.canResurrect[0].parent;
@@ -63,6 +76,7 @@ export class PlayerScript extends Script {
     }
 
     const ghost = this.actorSpawner.spawn(LIGHT_FIGHTER_GHOST_ID);
+    this.activeGhost = ghost;
 
     const corpseTransform = corpse.getComponent(Transform);
     const ghostTransform = ghost.getComponent(Transform);

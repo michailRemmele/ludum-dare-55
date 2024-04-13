@@ -6,7 +6,6 @@
   "components.ai.strategies.archer.title": "archer",
   
   "components.health.title": "Health",
-
   "components.health.points.title": "Points",
 
   "components.movement.title": "Movement",
@@ -20,6 +19,11 @@
   "components.hitBox.title": "Hit Box",
 
   "components.ghost.title": "Ghost",
+
+  "components.mana.title": "Mana",
+  "components.mana.points.title": "Points",
+
+  "components.spellbook.title": "Spellbook",
 
   "components.weapon.title": "Weapon",
   "components.weapon.type.title": "Type",

@@ -1,0 +1,22 @@
+.action-button {
+  display: flex;
+  align-items: center;
+
+  color: white;
+}
+
+.action-button__key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 4px solid white;
+  border-radius: 4px;
+  font-size: 32px;
+  margin-right: 8px;
+}
+
+.action-button__label {
+  font-size: 24px;
+}
