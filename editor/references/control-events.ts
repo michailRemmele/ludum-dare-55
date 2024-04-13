@@ -1,9 +1,9 @@
 import type { Reference } from 'remiz-editor';
 
-import { ExampleControl } from '../../src/game/events';
+import { MoveLeft, MoveRight, MoveJump } from '../../src/game/events';
 
 export const controlEventsReference: Reference = {
   items: [
-    ExampleControl,
+    MoveLeft, MoveRight, MoveJump,
   ].map((value) => ({ title: value, value })),
 };

@@ -1,7 +1,10 @@
 {
   "components.exampleComponent.title": "Example Component",
   "components.exampleComponent.field.title": "Field",
+  "components.movement.title": "Movement",
+  "components.movement.speed.title": "Speed",
 
+  "systems.movementSystem.title": "Movement System",
   "systems.exampleSystem.title": "Example System",
 
   "resources.scriptSystem.exampleScript.impulse.title": "Impulse"
