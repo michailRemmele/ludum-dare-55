@@ -22,6 +22,10 @@ export const ai: WidgetSchema = {
           title: 'components.ai.strategies.lightFighter.title',
           value: 'lightFighter',
         },
+        {
+          title: 'components.ai.strategies.archer.title',
+          value: 'archer',
+        },
       ],
     },
   },

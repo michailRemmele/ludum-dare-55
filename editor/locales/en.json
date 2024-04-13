@@ -3,6 +3,7 @@
   "components.ai.strategy.title": "Strategy",
   "components.ai.isEnemy.title": "Is Enemy",
   "components.ai.strategies.lightFighter.title": "lightFighter",
+  "components.ai.strategies.archer.title": "archer",
   
   "components.health.title": "Health",
 
@@ -35,5 +36,6 @@
   "systems.healthSystem.title": "Health System",
   "systems.aiSystem.title": "AI System",
   "systems.fightSystem.title": "Fight System",
-  "systems.damageSystem.title": "Damage System"
+  "systems.damageSystem.title": "Damage System",
+  "systems.reaper.title": "Reaper"
 }

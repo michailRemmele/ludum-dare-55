@@ -37,11 +37,6 @@ export class DamageSystem extends System {
     }
 
     health.points -= Math.round(value);
-
-    if (health.points <= 0) {
-      health.points = 0;
-      target.dispatchEvent(EventType.Kill);
-    }
   };
 }
 
