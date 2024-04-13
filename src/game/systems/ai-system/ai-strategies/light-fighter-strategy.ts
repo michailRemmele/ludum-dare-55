@@ -24,7 +24,7 @@ import { AIStrategy } from './ai-strategy';
 
 const SPAWN_COOLDOWN = 1000;
 const PREPARE_TO_ATTACK_COOLDOWN = 500;
-const MELEE_RADIUS = 48;
+const MELEE_RADIUS = 36;
 
 const FOLLOW_DISTANCE = 48;
 const PATROL_DISTANCE = 48;
