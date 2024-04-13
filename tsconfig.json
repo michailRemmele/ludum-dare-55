@@ -5,6 +5,8 @@
 
       "noEmit": true,
 
+      "allowJs": true,
+
       "module": "nodenext",
       "moduleResolution": "nodenext",
       "allowImportingTsExtensions": true,

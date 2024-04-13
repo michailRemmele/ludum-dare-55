@@ -11,7 +11,7 @@
   "dependencies": {
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "remiz": "0.12.1",
+    "remiz": "0.12.2",
     "remiz-editor": "0.0.14"
   },
   "devDependencies": {
@@ -22,6 +22,8 @@
     "@babel/preset-typescript": "7.23.0",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
+    "@emotion/react": "11.11.0",
+    "@emotion/styled": "11.11.0",
     "babel-loader": "9.1.3",
     "clean-webpack-plugin": "4.0.0",
     "copy-webpack-plugin": "11.0.0",

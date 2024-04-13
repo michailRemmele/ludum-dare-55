@@ -53,19 +53,27 @@ export class MovementSystem extends System {
 
   private handleMoveLeft = (event: ActorEvent): void => {
     const movement = event.target.getComponent(Movement);
+    if (!movement) {
+      return;
+    }
+
     movement.direction = -1;
     movement.isMoving = true;
   };
 
   private handleMoveRight = (event: ActorEvent): void => {
     const movement = event.target.getComponent(Movement);
+    if (!movement) {
+      return;
+    }
+
     movement.direction = 1;
     movement.isMoving = true;
   };
 
   private handleJump = (event: ActorEvent): void => {
     const movement = event.target.getComponent(Movement);
-    if (movement.isJumping) {
+    if (!movement || movement.isJumping) {
       return;
     }
 

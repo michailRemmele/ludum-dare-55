@@ -15,9 +15,12 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'no-param-reassign': 'warn',
     'class-methods-use-this': 0,
+    'import/extensions': 0,
+    'no-underscore-dangle': 0,
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'react/react-in-jsx-scope': 0,
     'react/no-unused-class-component-methods': 0,
+    'react/prop-types': 0,
   },
   overrides: [
     {

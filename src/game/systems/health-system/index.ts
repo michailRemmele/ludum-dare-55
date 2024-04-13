@@ -7,11 +7,17 @@ import type {
   ActorSpawner,
 } from 'remiz';
 
-import { Health, Movement } from '../../components';
+import {
+  Health,
+  Movement,
+  AI,
+  Weapon,
+  Ghost,
+} from '../../components';
 import * as EventType from '../../events';
 import { RESURRECTION_AREA_ID } from '../../../consts/templates';
 
-const COMPONENTS_TO_DELETE = [Health, Movement];
+const COMPONENTS_TO_DELETE = [Health, Movement, AI, Weapon];
 
 export class HealthSystem extends System {
   private actorCollection: ActorCollection;
@@ -31,10 +37,12 @@ export class HealthSystem extends System {
       const { points } = actor.getComponent(Health);
 
       if (points <= 0) {
-        COMPONENTS_TO_DELETE.forEach((Component) => actor.removeComponent(Component));
+        if (!actor.getComponent(Ghost)) {
+          const resurrectionArea = this.actorSpawner.spawn(RESURRECTION_AREA_ID);
+          actor.appendChild(resurrectionArea);
+        }
 
-        const resurrectionArea = this.actorSpawner.spawn(RESURRECTION_AREA_ID);
-        actor.appendChild(resurrectionArea);
+        COMPONENTS_TO_DELETE.forEach((Component) => actor.removeComponent(Component));
 
         actor.dispatchEvent(EventType.Kill);
       }
