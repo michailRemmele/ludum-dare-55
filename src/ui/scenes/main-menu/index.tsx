@@ -22,7 +22,7 @@ export const MainMenu: FC = () => {
   return (
     <div className="main-menu">
       <img
-        src="/images/logo.png"
+        src="./images/logo.png"
         alt="Alumnus of Darkness"
         className="main-menu__logo"
         width="480px"
