@@ -24,7 +24,7 @@ import { AIStrategy } from './ai-strategy';
 
 const SPAWN_COOLDOWN = 1000;
 const PREPARE_TO_ATTACK_COOLDOWN = 500;
-const MELEE_RADIUS = 36;
+const MELEE_RADIUS = 24;
 
 const FOLLOW_DISTANCE = 48;
 const PATROL_DISTANCE = 48;
@@ -77,7 +77,11 @@ export class LightFighterStrategy implements AIStrategy {
     if (!enemyHealth) {
       return;
     }
-    if ((!enemyAI && !this.isEnemy) || enemyAI?.isEnemy === this.isEnemy) {
+    if (
+      (!enemyAI && !this.isEnemy)
+      || (enemyAI?.isEnemy === this.isEnemy)
+      || (this.isEnemy && enemyAI)
+    ) {
       return;
     }
     if (this.currentEnemy?.getComponent(AI)) {

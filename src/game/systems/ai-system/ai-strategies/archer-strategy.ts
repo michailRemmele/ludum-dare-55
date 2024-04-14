@@ -68,7 +68,11 @@ export class ArcherStrategy implements AIStrategy {
     if (!enemyHealth) {
       return;
     }
-    if ((!enemyAI && !this.isEnemy) || enemyAI?.isEnemy === this.isEnemy) {
+    if (
+      (!enemyAI && !this.isEnemy)
+      || (enemyAI?.isEnemy === this.isEnemy)
+      || (this.isEnemy && enemyAI)
+    ) {
       return;
     }
     if (this.currentEnemy?.getComponent(AI)) {
