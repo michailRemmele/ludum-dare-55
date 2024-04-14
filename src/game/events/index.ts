@@ -4,6 +4,7 @@ export const MoveLeft = 'MoveLeft';
 export const MoveRight = 'MoveRight';
 export const MoveJump = 'MoveJump';
 export const ResurrectInput = 'ResurrectInput';
+export const Resurrect = 'Resurrect';
 export const Kill = 'Kill';
 export const Attack = 'Attack';
 export const Damage = 'Damage';
@@ -23,6 +24,7 @@ declare module 'remiz' {
     [MoveRight]: ActorEvent
     [MoveJump]: ActorEvent
     [ResurrectInput]: ActorEvent
+    [Resurrect]: ActorEvent
     [Kill]: ActorEvent
     [Attack]: AttackEvent
     [Damage]: DamageEvent

@@ -87,6 +87,8 @@ export class PlayerScript extends Script {
     corpse.remove();
 
     this.scene.appendChild(ghost);
+
+    this.actor.dispatchEvent(EventType.Resurrect);
   };
 }
 
