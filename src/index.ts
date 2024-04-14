@@ -21,6 +21,7 @@ import {
   Transform,
   MouseControl,
   ScriptBundle,
+  Light,
 } from 'remiz';
 
 import * as GameSystems from './game/systems';
@@ -54,6 +55,7 @@ const engine = new Engine({
     Transform,
     MouseControl,
     ScriptBundle,
+    Light,
     ...Object.values(GameComponents),
   ],
   resources: {
