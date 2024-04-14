@@ -13,6 +13,7 @@ import {
   AI,
   Weapon,
   Ghost,
+  HitBox,
 } from '../../components';
 import * as EventType from '../../events';
 import { RESURRECTION_AREA_ID } from '../../../consts/templates';
@@ -43,6 +44,9 @@ export class HealthSystem extends System {
         }
 
         COMPONENTS_TO_DELETE.forEach((Component) => actor.removeComponent(Component));
+
+        const hitBox = actor.children.find((child) => child.getComponent(HitBox));
+        hitBox?.remove();
 
         actor.dispatchEvent(EventType.Kill);
       }

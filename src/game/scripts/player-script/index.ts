@@ -3,6 +3,7 @@ import type {
   ScriptOptions,
   Scene,
   UpdateOptions,
+  ActorEvent,
 } from 'remiz';
 import { Actor, Script, Transform } from 'remiz';
 import { CollisionEnter, CollisionLeave } from 'remiz/events';
@@ -18,7 +19,7 @@ import {
 import { Resurrectable, Spellbook } from '../../components';
 
 const SUMMON_COOLDOWN = 2000;
-const MAX_GHOSTS = 3;
+const MAX_GHOSTS = 2;
 
 const RESURRECT_MAP: Record<string, string> = {
   [LIGHT_FIGHTER_ID]: LIGHT_FIGHTER_GHOST_ID,
@@ -32,6 +33,7 @@ export class PlayerScript extends Script {
   private canResurrect: Array<Actor>;
   private activeGhosts: Array<Actor>;
   private summonCooldown: number;
+  private lastResurrectedId: string | undefined;
 
   constructor(options: ScriptOptions) {
     super();
@@ -99,13 +101,22 @@ export class PlayerScript extends Script {
   };
 
   private handleResurrect = (): void => {
+    if (!this.canResurrect.length && !this.activeGhosts.length) {
+      this.resurrectLast();
+    } else {
+      this.resurrectCorpse();
+    }
+  };
+
+  private handleGhostDeath = (event: ActorEvent): void => {
+    const { target } = event;
+    this.activeGhosts = this.activeGhosts.filter((ghost) => ghost !== target);
+    target.removeEventListener(EventType.Kill, this.handleGhostDeath);
+  };
+
+  private resurrectCorpse(): void {
     if (!this.canResurrect.length) {
       return;
-    }
-
-    if (this.activeGhosts.length >= MAX_GHOSTS) {
-      const ghost = this.activeGhosts.shift();
-      ghost?.dispatchEvent(EventType.Kill);
     }
 
     const corpse = this.canResurrect[0].parent;
@@ -114,8 +125,7 @@ export class PlayerScript extends Script {
     }
 
     const ghostTemplateId = RESURRECT_MAP[corpse.templateId];
-    const ghost = this.actorSpawner.spawn(ghostTemplateId);
-    this.activeGhosts.push(ghost);
+    const ghost = this.spawnGhost(ghostTemplateId);
 
     const corpseTransform = corpse.getComponent(Transform);
     const ghostTransform = ghost.getComponent(Transform);
@@ -125,14 +135,48 @@ export class PlayerScript extends Script {
 
     corpse.remove();
 
+    this.lastResurrectedId = ghostTemplateId;
+  }
+
+  private resurrectLast(): void {
+    if (!this.lastResurrectedId) {
+      return;
+    }
+
+    const ghost = this.spawnGhost(this.lastResurrectedId);
+
+    const playerTransform = this.actor.getComponent(Transform);
+    const ghostTransform = ghost.getComponent(Transform);
+
+    ghostTransform.offsetX = playerTransform.offsetX;
+    ghostTransform.offsetY = playerTransform.offsetY;
+  }
+
+  private spawnGhost(id: string): Actor {
+    if (this.activeGhosts.length >= MAX_GHOSTS) {
+      const ghost = this.activeGhosts.shift();
+      ghost?.dispatchEvent(EventType.Kill);
+    }
+
+    const ghost = this.actorSpawner.spawn(id);
+    this.activeGhosts.push(ghost);
+    ghost.addEventListener(EventType.Kill, this.handleGhostDeath);
+
     this.scene.appendChild(ghost);
 
     this.actor.dispatchEvent(EventType.Resurrect);
-  };
+
+    return ghost;
+  }
 
   update(options: UpdateOptions): void {
     if (this.summonCooldown >= 0) {
       this.summonCooldown -= options.deltaTime;
+    }
+
+    const spellbook = this.actor.getComponent(Spellbook);
+    if (this.activeGhosts.length === 0 && this.lastResurrectedId) {
+      spellbook.canResurrect = true;
     }
   }
 }

@@ -19,7 +19,7 @@ import {
 } from '../../components';
 import * as EventType from '../../events';
 
-const JUMP_IMPULSE = -260;
+const JUMP_IMPULSE = -220;
 
 export class MovementSystem extends System {
   private scene: Scene;

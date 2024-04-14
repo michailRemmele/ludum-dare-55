@@ -10,6 +10,7 @@ import type {
   ActorEvent,
 } from 'remiz';
 
+import { PLAYER_ID } from '../../../consts/templates';
 import { Resurrectable } from '../../components';
 import * as EventType from '../../events';
 
@@ -49,7 +50,7 @@ export class Reaper extends System {
     const actor = value instanceof Actor ? value : value.target;
 
     const isResurrectable = actor.children.some((child) => child.getComponent(Resurrectable));
-    if (isResurrectable) {
+    if (isResurrectable || actor.id === PLAYER_ID) {
       return;
     }
 
