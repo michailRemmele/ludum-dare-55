@@ -1,7 +1,6 @@
 import {
   MathOps,
   Transform,
-  Vector2,
   ColliderContainer,
 } from 'remiz';
 import type {
@@ -27,15 +26,12 @@ const PREPARE_TO_ATTACK_COOLDOWN = 500;
 const MELEE_RADIUS = 24;
 
 const FOLLOW_DISTANCE = 48;
-const PATROL_DISTANCE = 48;
 
 export class LightFighterStrategy implements AIStrategy {
   private actor: Actor;
   private cooldown: number;
   private isEnemy: boolean;
   private player: Actor;
-  private startPoint: Vector2;
-  private patrolDirection: number;
   private enemyDetector: Actor;
   private currentEnemy: Actor | undefined;
   private isMeleeEnemy: boolean;
@@ -52,13 +48,8 @@ export class LightFighterStrategy implements AIStrategy {
     this.isMeleeEnemy = false;
     this.prepareToAttack = false;
 
-    const transform = actor.getComponent(Transform);
-    this.startPoint = new Vector2(transform.offsetX, transform.offsetY);
-
     this.enemyDetector = actor.children.find((child) => child.getComponent(EnemyDetector)) as Actor;
     this.enemyDetector.addEventListener(CollisionStay, this.handleEnemyDetectorCollision);
-
-    this.patrolDirection = 1;
   }
 
   destroy(): void {
@@ -77,11 +68,7 @@ export class LightFighterStrategy implements AIStrategy {
     if (!enemyHealth) {
       return;
     }
-    if (
-      (!enemyAI && !this.isEnemy)
-      || (enemyAI?.isEnemy === this.isEnemy)
-      || (this.isEnemy && enemyAI)
-    ) {
+    if ((!enemyAI && !this.isEnemy) || (enemyAI?.isEnemy === this.isEnemy)) {
       return;
     }
     if (this.currentEnemy?.getComponent(AI)) {
@@ -209,29 +196,6 @@ export class LightFighterStrategy implements AIStrategy {
     );
   }
 
-  private patrol(): void {
-    if (this.currentEnemy) {
-      return;
-    }
-
-    const actorTransform = this.actor.getComponent(Transform);
-
-    const distance = MathOps.getDistanceBetweenTwoPoints(
-      this.startPoint.x,
-      actorTransform.offsetX,
-      this.startPoint.y,
-      actorTransform.offsetY,
-    );
-
-    if (distance > PATROL_DISTANCE) {
-      this.patrolDirection = actorTransform.offsetX > this.startPoint.x ? -1 : 1;
-    }
-
-    this.actor.dispatchEvent(
-      this.patrolDirection > 0 ? EventType.MoveRight : EventType.MoveLeft,
-    );
-  }
-
   update(deltaTime: number): void {
     this.cooldown -= deltaTime;
 
@@ -242,8 +206,6 @@ export class LightFighterStrategy implements AIStrategy {
       this.move();
     } else if (!this.isEnemy) {
       this.follow();
-    } else {
-      this.patrol();
     }
   }
 }

@@ -2,14 +2,27 @@ import type {
   ActorSpawner,
   ScriptOptions,
   Scene,
+  UpdateOptions,
 } from 'remiz';
 import { Actor, Script, Transform } from 'remiz';
 import { CollisionEnter, CollisionLeave } from 'remiz/events';
 import type { CollisionEnterEvent, CollisionLeaveEvent } from 'remiz/events';
 
 import * as EventType from '../../events';
-import { LIGHT_FIGHTER_GHOST_ID } from '../../../consts/templates';
+import {
+  ARCHER_ID,
+  LIGHT_FIGHTER_ID,
+  ARCHER_GHOST_ID,
+  LIGHT_FIGHTER_GHOST_ID,
+} from '../../../consts/templates';
 import { Resurrectable, Spellbook } from '../../components';
+
+const SUMMON_COOLDOWN = 2000;
+
+const RESURRECT_MAP: Record<string, string> = {
+  [LIGHT_FIGHTER_ID]: LIGHT_FIGHTER_GHOST_ID,
+  [ARCHER_ID]: ARCHER_GHOST_ID,
+};
 
 export class PlayerScript extends Script {
   private scene: Scene;
@@ -17,6 +30,7 @@ export class PlayerScript extends Script {
   private actorSpawner: ActorSpawner;
   private canResurrect: Array<Actor>;
   private activeGhost: Actor | undefined;
+  private summonCooldown: number;
 
   constructor(options: ScriptOptions) {
     super();
@@ -25,17 +39,33 @@ export class PlayerScript extends Script {
     this.actor = options.actor;
     this.actorSpawner = options.actorSpawner;
     this.canResurrect = [];
+    this.summonCooldown = 0;
 
     this.actor.addEventListener(CollisionEnter, this.handleCanResurrect);
     this.actor.addEventListener(CollisionLeave, this.handleCannotResurrect);
     this.actor.addEventListener(EventType.ResurrectInput, this.handleResurrect);
+    this.actor.addEventListener(EventType.SummonInput, this.handleSummon);
   }
 
   destroy(): void {
     this.actor.removeEventListener(CollisionEnter, this.handleCanResurrect);
     this.actor.removeEventListener(CollisionLeave, this.handleCannotResurrect);
-    this.actor.removeEventListener(EventType.ResurrectInput, this.handleResurrect);
+    this.actor.removeEventListener(EventType.SummonInput, this.handleSummon);
   }
+
+  private handleSummon = (): void => {
+    if (!this.activeGhost || this.summonCooldown > 0) {
+      return;
+    }
+
+    const ghostTransform = this.activeGhost.getComponent(Transform);
+    const playerTransform = this.actor.getComponent(Transform);
+
+    ghostTransform.offsetX = playerTransform.offsetX;
+    ghostTransform.offsetY = playerTransform.offsetY;
+
+    this.summonCooldown = SUMMON_COOLDOWN;
+  };
 
   private handleCanResurrect = (event: CollisionEnterEvent): void => {
     const { actor } = event;
@@ -71,11 +101,12 @@ export class PlayerScript extends Script {
     }
 
     const corpse = this.canResurrect[0].parent;
-    if (!(corpse instanceof Actor)) {
+    if (!(corpse instanceof Actor) || !corpse.templateId) {
       return;
     }
 
-    const ghost = this.actorSpawner.spawn(LIGHT_FIGHTER_GHOST_ID);
+    const ghostTemplateId = RESURRECT_MAP[corpse.templateId];
+    const ghost = this.actorSpawner.spawn(ghostTemplateId);
     this.activeGhost = ghost;
 
     const corpseTransform = corpse.getComponent(Transform);
@@ -90,6 +121,12 @@ export class PlayerScript extends Script {
 
     this.actor.dispatchEvent(EventType.Resurrect);
   };
+
+  update(options: UpdateOptions): void {
+    if (this.summonCooldown >= 0) {
+      this.summonCooldown -= options.deltaTime;
+    }
+  }
 }
 
 PlayerScript.scriptName = 'PlayerScript';
