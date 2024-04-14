@@ -24,6 +24,7 @@ import { AIStrategy } from './ai-strategy';
 const SPAWN_COOLDOWN = 1000;
 const PREPARE_TO_ATTACK_COOLDOWN = 500;
 const MELEE_RADIUS = 24;
+const VERTICAL_LIMIT = 12;
 
 const FOLLOW_DISTANCE = 48;
 
@@ -72,6 +73,12 @@ export class LightFighterStrategy implements AIStrategy {
       return;
     }
     if (this.currentEnemy?.getComponent(AI)) {
+      return;
+    }
+
+    const { offsetY } = this.actor.getComponent(Transform);
+    const { offsetY: enemyOffsetY } = enemy.getComponent(Transform);
+    if (Math.abs(offsetY - enemyOffsetY) >= VERTICAL_LIMIT) {
       return;
     }
 

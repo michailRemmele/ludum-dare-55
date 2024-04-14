@@ -3,10 +3,13 @@ import {
   useEffect,
   useState,
   useCallback,
+  useMemo,
 } from 'react';
 import type { FC } from 'react';
+import { ActorCollection } from 'remiz';
 import { LoadScene } from 'remiz/events';
 
+import { AI } from '../../../game/components';
 import { EngineContext } from '../../providers';
 import { PLAYER_ID } from '../../../consts/templates';
 import { GAME_ID } from '../../../consts/scenes';
@@ -20,9 +23,12 @@ import {
 import './style.css';
 
 export const Game: FC = () => {
-  const { scene } = useContext(EngineContext);
+  const { scene, gameStateObserver } = useContext(EngineContext);
 
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isVictory, setIsVictory] = useState(false);
+
+  const aiCollection = useMemo(() => new ActorCollection(scene, { components: [AI] }), []);
 
   const handleRestart = useCallback(() => {
     scene.dispatchEvent(LoadScene, {
@@ -43,7 +49,25 @@ export const Game: FC = () => {
 
     player?.addEventListener(EventType.Kill, handleKill);
 
-    return () => player?.removeEventListener(EventType.Kill, handleKill);
+    const handleUpdate = (): void => {
+      let isNoEnemy = true;
+      aiCollection.forEach((actor) => {
+        if (actor.getComponent(AI)?.isEnemy) {
+          isNoEnemy = false;
+        }
+      });
+
+      if (isNoEnemy) {
+        setIsVictory(true);
+      }
+    };
+
+    gameStateObserver.subscribe(handleUpdate);
+
+    return () => {
+      player?.removeEventListener(EventType.Kill, handleKill);
+      gameStateObserver.unsubscribe(handleUpdate);
+    };
   }, []);
 
   return (
@@ -55,10 +79,12 @@ export const Game: FC = () => {
       <div className="game__footer">
         <ResurrectButton />
       </div>
-      {isGameOver && (
+      {(isGameOver || isVictory) && (
         <div className="game-over__overlay">
           <div className="game-over__content">
-            <h1 className="game-over__title">Game Over</h1>
+            <h1 className="game-over__title">
+              {isGameOver ? 'Game Over' : 'Victory' }
+            </h1>
             <button className="game-over__button" type="button" onClick={handleRestart}>Restart</button>
           </div>
         </div>
