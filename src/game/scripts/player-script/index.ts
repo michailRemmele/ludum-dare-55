@@ -18,6 +18,7 @@ import {
 import { Resurrectable, Spellbook } from '../../components';
 
 const SUMMON_COOLDOWN = 2000;
+const MAX_GHOSTS = 3;
 
 const RESURRECT_MAP: Record<string, string> = {
   [LIGHT_FIGHTER_ID]: LIGHT_FIGHTER_GHOST_ID,
@@ -29,7 +30,7 @@ export class PlayerScript extends Script {
   private actor: Actor;
   private actorSpawner: ActorSpawner;
   private canResurrect: Array<Actor>;
-  private activeGhost: Actor | undefined;
+  private activeGhosts: Array<Actor>;
   private summonCooldown: number;
 
   constructor(options: ScriptOptions) {
@@ -39,6 +40,7 @@ export class PlayerScript extends Script {
     this.actor = options.actor;
     this.actorSpawner = options.actorSpawner;
     this.canResurrect = [];
+    this.activeGhosts = [];
     this.summonCooldown = 0;
 
     this.actor.addEventListener(CollisionEnter, this.handleCanResurrect);
@@ -54,17 +56,22 @@ export class PlayerScript extends Script {
   }
 
   private handleSummon = (): void => {
-    if (!this.activeGhost || this.summonCooldown > 0) {
+    if (!this.activeGhosts.length || this.summonCooldown > 0) {
       return;
     }
 
-    const ghostTransform = this.activeGhost.getComponent(Transform);
     const playerTransform = this.actor.getComponent(Transform);
 
-    ghostTransform.offsetX = playerTransform.offsetX;
-    ghostTransform.offsetY = playerTransform.offsetY;
+    this.activeGhosts.forEach((ghost) => {
+      const ghostTransform = ghost.getComponent(Transform);
+
+      ghostTransform.offsetX = playerTransform.offsetX;
+      ghostTransform.offsetY = playerTransform.offsetY;
+    });
 
     this.summonCooldown = SUMMON_COOLDOWN;
+
+    this.actor.dispatchEvent(EventType.Summon);
   };
 
   private handleCanResurrect = (event: CollisionEnterEvent): void => {
@@ -96,8 +103,9 @@ export class PlayerScript extends Script {
       return;
     }
 
-    if (this.activeGhost) {
-      this.activeGhost.dispatchEvent(EventType.Kill);
+    if (this.activeGhosts.length >= MAX_GHOSTS) {
+      const ghost = this.activeGhosts.shift();
+      ghost?.dispatchEvent(EventType.Kill);
     }
 
     const corpse = this.canResurrect[0].parent;
@@ -107,7 +115,7 @@ export class PlayerScript extends Script {
 
     const ghostTemplateId = RESURRECT_MAP[corpse.templateId];
     const ghost = this.actorSpawner.spawn(ghostTemplateId);
-    this.activeGhost = ghost;
+    this.activeGhosts.push(ghost);
 
     const corpseTransform = corpse.getComponent(Transform);
     const ghostTransform = ghost.getComponent(Transform);

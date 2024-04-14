@@ -37,7 +37,7 @@ export class HealthSystem extends System {
       const { points } = actor.getComponent(Health);
 
       if (points <= 0) {
-        if (!actor.getComponent(Ghost)) {
+        if (!actor.getComponent(Ghost) && actor.getComponent(AI)) {
           const resurrectionArea = this.actorSpawner.spawn(RESURRECTION_AREA_ID);
           actor.appendChild(resurrectionArea);
         }

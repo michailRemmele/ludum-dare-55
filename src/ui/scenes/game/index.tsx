@@ -14,7 +14,7 @@ import * as EventType from '../../../game/events';
 
 import {
   HealthBar,
-  ManaBar,
+  // ManaBar,
   ResurrectButton,
 } from './components';
 import './style.css';
@@ -48,21 +48,20 @@ export const Game: FC = () => {
 
   return (
     <div className="game">
-      {isGameOver ? (
-        <div className="game__game-over">
-          <h1 className="game-over__title">Game Over</h1>
-          <button className="game-over__button" type="button" onClick={handleRestart}>Restart</button>
+      <div className="game__header">
+        <HealthBar />
+        {/* <ManaBar /> */}
+      </div>
+      <div className="game__footer">
+        <ResurrectButton />
+      </div>
+      {isGameOver && (
+        <div className="game-over__overlay">
+          <div className="game-over__content">
+            <h1 className="game-over__title">Game Over</h1>
+            <button className="game-over__button" type="button" onClick={handleRestart}>Restart</button>
+          </div>
         </div>
-      ) : (
-        <>
-          <div className="game__header">
-            <HealthBar />
-            <ManaBar />
-          </div>
-          <div className="game__footer">
-            <ResurrectButton />
-          </div>
-        </>
       )}
     </div>
   );

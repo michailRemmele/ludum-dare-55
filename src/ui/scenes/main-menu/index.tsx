@@ -21,7 +21,12 @@ export const MainMenu: FC = () => {
 
   return (
     <div className="main-menu">
-      <h1>Ludum Dare 55</h1>
+      <img
+        src="/images/logo.png"
+        alt="Alumnus of Darkness"
+        className="main-menu__logo"
+        width="480px"
+      />
       <button className="main-menu__button" type="button" onClick={handlePlay}>Play</button>
     </div>
   );

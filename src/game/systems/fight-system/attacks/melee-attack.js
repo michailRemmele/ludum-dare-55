@@ -7,10 +7,12 @@ import {
 // eslint-disable-next-line import/no-unresolved
 import { CollisionEnter, AddImpulse } from 'remiz/events';
 
+import { PLAYER_ID } from '../../../../consts/templates';
 import * as EventType from '../../../events';
 import {
   Weapon,
   HitBox,
+  Ghost,
 } from '../../../components';
 
 import { Attack } from './attack';
@@ -76,6 +78,13 @@ export class MeleeAttack extends Attack {
     }
 
     if (this._actor.id === target.id || this._hit.id === target.id) {
+      return;
+    }
+
+    // TODO: Remove this hack
+    if (this._actor.getComponent(Ghost)
+      && (target.id === PLAYER_ID || target.getComponent(Ghost))
+    ) {
       return;
     }
 

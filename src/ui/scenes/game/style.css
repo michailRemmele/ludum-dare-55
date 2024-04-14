@@ -17,15 +17,52 @@
   justify-content: flex-end;
 }
 
-.game__game-over {
+@keyframes gameOver {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.game-over__overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(32, 32, 32, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation-duration: 3s;
+  animation-name: gameOver;
+}
+
+.game-over__content {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: auto;
   padding: 24px;
-  background-color: #202020;
+  background-color: rgba(32, 32, 32, 0.5);
+  border: 4px solid white;
 }
 
 .game-over__title {
   color: white;
+  margin-top: 0;
+}
+
+.game-over__button {
+  border: 4px solid white;
+  padding: 10px 24px;
+  font-size: 24px;
+  color: white;
+  background: none;
+  text-transform: uppercase;
+  cursor: pointer;
 }
