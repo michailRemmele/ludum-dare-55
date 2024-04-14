@@ -25,7 +25,6 @@ export const MainMenu: FC = () => {
         src="./images/logo.png"
         alt="Alumnus of Darkness"
         className="main-menu__logo"
-        width="480px"
       />
       <button className="main-menu__button" type="button" onClick={handlePlay}>Play</button>
     </div>
